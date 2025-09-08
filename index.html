@@ -1,55 +1,215 @@
-<!doctype html><html lang="sr"><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SocialBoost AI PRO — GPT-4o</title>
-<style>
-:root{--bg:#0c1024;--card:#12183a;--muted:#93a0cf;--text:#e9edff;--accent:#6366f1}
-*{box-sizing:border-box}body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI;background:linear-gradient(180deg,#0c1024,#0a0f1f);color:var(--text)}
-.wrap{max-width:1080px;margin:28px auto;padding:0 16px}.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
-.logo{width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,#4f46e5,#06b6d4)}h1{margin:0;font-size:22px}
-.card{background:linear-gradient(180deg,#12183a,#0f1730);border:1px solid #1f2a4d;border-radius:16px;padding:16px;box-shadow:0 14px 40px rgba(0,0,0,.35)}
-.grid{display:grid;grid-template-columns:360px 1fr;gap:16px}label{font-size:12px;color:var(--muted);display:block;margin-bottom:6px}
-input,select{width:100%;background:#0e1633;border:1px solid #27366b;color:var(--text);border-radius:10px;padding:10px 12px}
-.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}.btns{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
-button{background:#18224a;border:1px solid #2b3a73;color:#e7edff;border-radius:12px;padding:10px 14px;cursor:pointer}
-button.primary{background:var(--accent);border-color:#4f46e5;color:white}.feed{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-.post{background:#0e1633;border:1px solid #27366b;border-radius:12px;padding:12px;min-height:150px}.muted{color:var(--muted);font-size:12px}
-.toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:8px 0 12px}.badge{font-size:12px;color:#a8b4e6;background:#0c1430;border:1px solid #23325d;padding:4px 8px;border-radius:999px}
-@media (max-width:980px){.grid{grid-template-columns:1fr}.feed{grid-template-columns:1fr 1fr}}@media (max-width:640px){.feed{grid-template-columns:1fr}}
-</style></head><body>
+<!doctype html>
+<html lang="sr">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>SocialBoost AI PRO — Groq</title>
+  <style>
+    :root{--bg:#0c1024;--card:#12183a;--muted:#93a0cf;--text:#e9edff;--accent:#6366f1}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI;background:linear-gradient(180deg,#0c1024,#0a0f1f);color:var(--text)}
+    .wrap{max-width:1080px;margin:28px auto;padding:0 16px}
+    .top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
+    .logo{width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,#4f46e5,#06b6d4)}
+    h1{margin:0;font-size:22px}
+    .card{background:linear-gradient(180deg,#12183a,#0f1730);border:1px solid #1f2a4d;border-radius:16px;padding:16px;box-shadow:0 14px 40px rgba(0,0,0,.35)}
+    .grid{display:grid;grid-template-columns:360px 1fr;gap:16px}
+    label{font-size:12px;color:var(--muted);display:block;margin-bottom:6px}
+    input,select{width:100%;background:#0e1633;border:1px solid #27366b;color:var(--text);border-radius:10px;padding:10px 12px}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .btns{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+    button{background:#18224a;border:1px solid #2b3a73;color:#e7edff;border-radius:12px;padding:10px 14px;cursor:pointer}
+    button.primary{background:var(--accent);border-color:#4f46e5;color:white}
+    .feed{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+    .post{background:#0e1633;border:1px solid #27366b;border-radius:12px;padding:12px;min-height:150px}
+    .muted{color:var(--muted);font-size:12px}
+    .toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:8px 0 12px}
+    .badge{font-size:12px;color:#a8b4e6;background:#0c1430;border:1px solid #23325d;padding:4px 8px;border-radius:999px}
+    @media (max-width:980px){.grid{grid-template-columns:1fr}.feed{grid-template-columns:1fr 1fr}}
+    @media (max-width:640px){.feed{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
 <div class="wrap">
   <div class="top">
     <div style="display:flex;gap:12px;align-items:center">
-      <div class="logo"></div><div><h1>SocialBoost AI PRO — GPT-4o</h1><div class="muted" id="ts"></div></div>
+      <div class="logo"></div>
+      <div>
+        <h1>SocialBoost AI PRO — Groq</h1>
+        <div class="muted" id="ts"></div>
+      </div>
     </div>
-    <div class="btns"><button id="exportTXT">Export TXT</button><button id="exportCSV">Export CSV</button><button id="exportJSON">Export JSON</button></div>
+    <div class="btns">
+      <button id="exportTXT">Export TXT</button>
+      <button id="exportCSV">Export CSV</button>
+      <button id="exportJSON">Export JSON</button>
+    </div>
   </div>
 
   <div class="grid">
     <div class="card">
-      <div class="row"><div><label>Niša / Tema</label><input id="niche" placeholder="npr. frizerski salon u Beogradu"></div>
-        <div><label>Ton</label><select id="tone"><option>Profesionalan</option><option>Zabavan</option><option>Edukativan</option><option>Motivacioni</option><option>Ležeran</option><option>Luksuzni</option></select></div></div>
+      <div class="row">
+        <div>
+          <label>Niša / Tema</label>
+          <input id="niche" placeholder="npr. frizerski salon u Beogradu">
+        </div>
+        <div>
+          <label>Ton</label>
+          <select id="tone">
+            <option>Profesionalan</option><option>Zabavan</option>
+            <option>Edukativan</option><option>Motivacioni</option>
+            <option>Ležeran</option><option>Luksuzni</option>
+          </select>
+        </div>
+      </div>
+
       <div class="row" style="margin-top:10px">
-        <div><label>Cilj</label><select id="goal"><option>Pratioci</option><option>Prodaja</option><option>Angažman</option><option>Svesnost</option><option>Posete sajtu</option><option>Leadovi</option></select></div>
-        <div><label>Platforma</label><select id="platform"><option>Instagram</option><option>TikTok</option><option>YouTube Shorts</option><option>Facebook</option></select></div></div>
+        <div>
+          <label>Cilj</label>
+          <select id="goal">
+            <option>Pratioci</option><option>Prodaja</option><option>Angažman</option>
+            <option>Svesnost</option><option>Posete sajtu</option><option>Leadovi</option>
+          </select>
+        </div>
+        <div>
+          <label>Platforma</label>
+          <select id="platform">
+            <option>Instagram</option><option>TikTok</option>
+            <option>YouTube Shorts</option><option>Facebook</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- NOVI RED: jezik + Groq modeli -->
       <div class="row" style="margin-top:10px">
-        <div><label>Broj objava</label><input id="count" type="number" min="3" max="50" value="12"></div>
-        <div><label>Model</label><select id="model"><option value="gpt-4o-mini">gpt-4o-mini (brzo/jeftino)</option><option value="gpt-4o">gpt-4o (kvalitet)</option></select></div></div>
-      <div class="btns" style="margin-top:14px"><button class="primary" id="generate">Generiši (AI)</button><button id="copy">Copy All</button><span class="badge" id="stats">0 postova</span></div>
-      <p class="muted" style="margin-top:6px">API poziv ide kroz Netlify Functions (ključ je bezbedan).</p>
+        <div>
+          <label>Jezik / Language</label>
+          <select id="lang">
+            <option value="sr">Srpski</option>
+            <option value="en">English</option>
+            <option value="de">Deutsch</option>
+            <option value="es">Español</option>
+            <option value="fr">Français</option>
+          </select>
+        </div>
+        <div>
+          <label>Model</label>
+          <select id="model">
+            <option value="llama-3.1-8b-instant">Llama-3.1-8B (brz/jeftin)</option>
+            <option value="llama-3.1-70b-versatile">Llama-3.1-70B (kvalitet)</option>
+            <option value="mixtral-8x7b-32768">Mixtral-8×7B (duži kontekst)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row" style="margin-top:10px">
+        <div>
+          <label>Broj objava</label>
+          <input id="count" type="number" min="3" max="50" value="12">
+        </div>
+        <div></div>
+      </div>
+
+      <div class="btns" style="margin-top:14px">
+        <button class="primary" id="generate">Generiši (AI)</button>
+        <button id="copy">Copy All</button>
+        <span class="badge" id="stats">0 postova</span>
+      </div>
+      <p class="muted" style="margin-top:6px">
+        API poziv ide kroz Netlify Functions (ključ je bezbedan). Modeli: Groq.
+      </p>
     </div>
 
-    <div class="card"><div class="toolbar"><strong>Feed preview</strong><span class="muted" id="hint">Spreman</span></div><div id="feed" class="feed"></div></div>
+    <div class="card">
+      <div class="toolbar"><strong>Feed preview</strong><span class="muted" id="hint">Spreman</span></div>
+      <div id="feed" class="feed"></div>
+    </div>
   </div>
 </div>
 
 <script>
 document.getElementById('ts').textContent = new Date().toLocaleString('sr-RS') + ' • server build';
-const $=(s)=>document.querySelector(s); const niche=$('#niche'), tone=$('#tone'), goal=$('#goal'), platform=$('#platform'), count=$('#count'), model=$('#model'); const feed=$('#feed'), stats=$('#stats'), hint=$('#hint');
-function hashtags(n,plat){ const base=(n||'biz').toLowerCase().replace(/[^a-z0-9čćžšđ\s]/gi,'').trim().split(/\s+/).slice(0,3); const uniq=new Set([...base.map(b=>'#'+b),'#'+(base.join('')||'biz'),'#'+(base[0]||'brand')+'tips','#marketing','#content','#viral','#'+(plat||'instagram').toLowerCase(),'#srbija']); return Array.from(uniq).slice(0,10);}
-let posts=[]; function render(){ stats.textContent=posts.length+' postova'; feed.innerHTML=posts.map((p,i)=>`<div class="post"><div class="muted">#${i+1} · ${p.platform}</div><div style="font-weight:600;margin:6px 0">${p.title}</div><div class="muted" style="white-space:pre-line">${p.body}</div><div style="margin-top:8px;color:#93a2f8">${p.hashtags.join(' ')}</div><div style="margin-top:8px"><span class="badge">CTA</span> ${p.cta}</div></div>`).join('');}
-async function generate(){ hint.textContent='Generišem…'; try{ const res=await fetch('/api/generate',{ method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ niche:niche.value, tone:tone.value, goal:goal.value, platform:platform.value, count:parseInt(count.value||'12'), model:model.value }) }); if(!res.ok){ throw new Error(await res.text()); } const data=await res.json(); let content=data.choices?.[0]?.message?.content||''; let obj={}; try{ obj=JSON.parse(content);}catch(e){ obj={items:[]}; } const items=Array.isArray(obj.items)?obj.items:[]; posts=items.map(it=>({ platform: platform.value, title: it.title||'Naslov', body: it.body||'Opis…', hashtags: Array.isArray(it.hashtags)?it.hashtags:hashtags(niche.value, platform.value), cta: it.cta||'Zapratite za još ovakvih saveta!' })); if(posts.length===0) throw new Error('Prazan odgovor'); render(); hint.textContent='Spremno ✔ (AI)'; } catch(e){ console.error(e); hint.textContent='Greška: '+String(e).slice(0,120); } }
-$('#generate').onclick=generate; $('#copy').onclick=()=>{ const txt=posts.map(p=>`[${p.platform}] ${p.title}\n${p.body}\n${p.hashtags.join(' ')}\nCTA: ${p.cta}`).join('\n\n'); navigator.clipboard.writeText(txt).then(()=>{ hint.textContent='Iskopirano ✔'; }).catch(()=>{ hint.textContent='Copy nije dozvoljen u ovom okruženju'; }); };
-document.getElementById('exportTXT').onclick=()=>{ const txt=posts.map(p=>`[${p.platform}] ${p.title}\n${p.body}\n${p.hashtags.join(' ')}\nCTA: ${p.cta}`).join('\n\n'); const b=new Blob([txt],{type:'text/plain'}); const u=URL.createObjectURL(b); const a=document.createElement('a'); a.href=u;a.download='socialboost.txt'; document.body.appendChild(a); a.click(); setTimeout(()=>{URL.revokeObjectURL(u);a.remove();},0); };
-document.getElementById('exportCSV').onclick=()=>{ const rows=[['platform','title','body','hashtags','cta']].concat(posts.map(p=>[p.platform,p.title,p.body,p.hashtags.join(' '),p.cta])); const esc=s=>'"'+String(s).replaceAll('"','""')+'"'; const csv=rows.map(r=>r.map(esc).join(',')).join('\n'); const b=new Blob([csv],{type:'text/csv'}); const u=URL.createObjectURL(b); const a=document.createElement('a'); a.href=u;a.download='socialboost.csv'; document.body.appendChild(a); a.click(); setTimeout(()=>{URL.revokeObjectURL(u);a.remove();},0); };
-document.getElementById('exportJSON').onclick=()=>{ const b=new Blob([JSON.stringify(posts,null,2)],{type:'application/json'}); const u=URL.createObjectURL(b); const a=document.createElement('a'); a.href=u;a.download='socialboost.json'; document.body.appendChild(a); a.click(); setTimeout(()=>{URL.revokeObjectURL(u);a.remove();},0); };
-</script></body></html>
+const $=(s)=>document.querySelector(s);
+const niche=$('#niche'), tone=$('#tone'), goal=$('#goal'), platform=$('#platform'),
+      count=$('#count'), model=$('#model'), lang=$('#lang');
+const feed=$('#feed'), stats=$('#stats'), hint=$('#hint');
+
+function hashtags(n,plat){
+  const base=(n||'biz').toLowerCase().replace(/[^a-z0-9čćžšđ\s]/gi,'').trim().split(/\s+/).slice(0,3);
+  const uniq=new Set([...base.map(b=>'#'+b),'#'+(base.join('')||'biz'),'#'+(base[0]||'brand')+'tips','#marketing','#content','#viral','#'+(plat||'instagram').toLowerCase(),'#srbija']);
+  return Array.from(uniq).slice(0,10);
+}
+
+let posts=[];
+function render(){
+  stats.textContent=posts.length+' postova';
+  feed.innerHTML=posts.map((p,i)=>`
+    <div class="post">
+      <div class="muted">#${i+1} · ${p.platform}</div>
+      <div style="font-weight:600;margin:6px 0">${p.title}</div>
+      <div class="muted" style="white-space:pre-line">${p.body}</div>
+      <div style="margin-top:8px;color:#93a2f8">${p.hashtags.join(' ')}</div>
+      <div style="margin-top:8px"><span class="badge">CTA</span> ${p.cta}</div>
+    </div>`).join('');
+}
+
+async function generate(){
+  hint.textContent='Generišem…';
+  try{
+    const res=await fetch('/api/generate',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        niche:niche.value, tone:tone.value, goal:goal.value,
+        platform:platform.value, count:parseInt(count.value||'12'),
+        model:model.value, lang:lang.value
+      })
+    });
+    if(!res.ok){ throw new Error(await res.text()); }
+    const data=await res.json();
+    let content=data.choices?.[0]?.message?.content||'';
+    let obj={};
+    try{ obj=JSON.parse(content);}catch{ obj={items:[]}; }
+    const items=Array.isArray(obj.items)?obj.items:[];
+    posts=items.map(it=>({
+      platform: platform.value,
+      title: it.title||'Naslov',
+      body: it.body||'Opis…',
+      hashtags: Array.isArray(it.hashtags)?it.hashtags:hashtags(niche.value, platform.value),
+      cta: it.cta|| (lang.value==='en'?'Follow for more tips!':'Zapratite za još ovakvih saveta!')
+    }));
+    if(posts.length===0) throw new Error('Prazan odgovor');
+    render(); hint.textContent='Spremno ✔ (AI)';
+  }catch(e){
+    console.error(e);
+    hint.textContent='Greška: '+String(e).slice(0,120);
+  }
+}
+
+$('#generate').onclick=generate;
+$('#copy').onclick=()=>{
+  const txt=posts.map(p=>`[${p.platform}] ${p.title}\n${p.body}\n${p.hashtags.join(' ')}\nCTA: ${p.cta}`).join('\n\n');
+  navigator.clipboard.writeText(txt).then(()=>{ hint.textContent='Iskopirano ✔'; })
+    .catch(()=>{ hint.textContent='Copy nije dozvoljen u ovom okruženju'; });
+};
+document.getElementById('exportTXT').onclick=()=>{
+  const txt=posts.map(p=>`[${p.platform}] ${p.title}\n${p.body}\n${p.hashtags.join(' ')}\nCTA: ${p.cta}`).join('\n\n');
+  const b=new Blob([txt],{type:'text/plain'}); const u=URL.createObjectURL(b);
+  const a=document.createElement('a'); a.href=u;a.download='socialboost.txt'; document.body.appendChild(a); a.click();
+  setTimeout(()=>{URL.revokeObjectURL(u);a.remove();},0);
+};
+document.getElementById('exportCSV').onclick=()=>{
+  const rows=[['platform','title','body','hashtags','cta']].concat(posts.map(p=>[p.platform,p.title,p.body,p.hashtags.join(' '),p.cta]));
+  const esc=s=>'"'+String(s).replaceAll('"','""')+'"';
+  const csv=rows.map(r=>r.map(esc).join(',')).join('\n');
+  const b=new Blob([csv],{type:'text/csv'}); const u=URL.createObjectURL(b);
+  const a=document.createElement('a'); a.href=u;a.download='socialboost.csv'; document.body.appendChild(a); a.click();
+  setTimeout(()=>{URL.revokeObjectURL(u);a.remove();},0);
+};
+document.getElementById('exportJSON').onclick=()=>{
+  const b=new Blob([JSON.stringify(posts,null,2)],{type:'application/json'}); const u=URL.createObjectURL(b);
+  const a=document.createElement('a'); a.href=u;a.download='socialboost.json'; document.body.appendChild(a); a.click();
+  setTimeout(()=>{URL.revokeObjectURL(u);a.remove();},0);
+};
+</script>
+</body>
+</html>
