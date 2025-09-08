@@ -79,7 +79,7 @@
         </div>
       </div>
 
-      <!-- NOVI RED: jezik + Groq modeli -->
+      <!-- NOVO: izbor jezika -->
       <div class="row" style="margin-top:10px">
         <div>
           <label>Jezik / Language</label>
@@ -155,7 +155,7 @@ function render(){
 async function generate(){
   hint.textContent='Generišem…';
   try{
-    const res=await fetch('/api/generate',{
+    const res=await fetch('/.netlify/functions/generate',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body: JSON.stringify({
