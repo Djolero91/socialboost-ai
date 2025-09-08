@@ -1,44 +1,48 @@
-// Netlify Function: /api/generate  (Groq + 5 jezika, Groq je primarni)
-const GROQ_URL = "https://api.groq.com/openai/v1/chat/completions";
-
-const SUPPORTED_LANGS = {
-  sr: "Serbian",
-  en: "English",
-  de: "German",
-  es: "Spanish",
-  fr: "French",
-};
-
+// netlify/functions/generate.js
 export async function handler(event) {
+  // CORS preflight
+  if (event.httpMethod === "OPTIONS") {
+    return {
+      statusCode: 204,
+      headers: corsHeaders(),
+    };
+  }
+
   try {
-    // Bezbedno parsiranje tela
-    let req = {};
-    try { req = JSON.parse(event.body || "{}"); } catch {}
+    const body = JSON.parse(event.body || "{}");
 
-    const count = Math.min(Math.max(Number(req.count) || 5, 1), 50);
-    const topic = (req.topic || "lokalni kafić").toString();
-    const tone  = (req.tone  || "zabavan").toString();
-    const goal  = (req.goal  || "prodaja").toString();
-
-    // Jezik (default sr)
-    const lang = (req.language || "sr").toString().toLowerCase();
-    const languageName = SUPPORTED_LANGS[lang] || SUPPORTED_LANGS.sr;
-
-    // Model na Groq-u
-    const model = (req.model || "llama-3.1-70b-versatile").toString();
+    const {
+      topic = "",
+      goal = "Prodaja",
+      platform = "Instagram",
+      tone = "Zabavan",
+      posts = 5,
+      lang = "sr",
+      model = "llama-3.1-70b-versatile" // Groq modeli: llama-3.1-70b-versatile, 8b, 405b (ako je dostupan)
+    } = body;
 
     if (!process.env.GROQ_API_KEY) {
       return json(500, { error: "GROQ_API_KEY nije postavljen u Netlify Environment variables." });
     }
 
-    const userPrompt = `
-Write ${count} short Instagram/TikTok posts for topic: "${topic}".
-Tone: ${tone}. Goal: ${goal}. Language: ${languageName}.
-Each post must be separated with a line '---'.
-Keep posts concise, punchy, and platform-ready. Avoid filler text.
-`.trim();
+    const prompt = `
+Praviš kalendar objava za društvene mreže.
+Ulaz:
+- Tema/Niša: ${topic}
+- Cilj: ${goal}
+- Platforma: ${platform}
+- Ton: ${tone}
+- Jezik (ISO skraćenica): ${lang}
+- Broj objava: ${posts}
 
-    const r = await fetch(GROQ_URL, {
+Zadatak:
+Napravi ${posts} konkretnih objava (short-form copy) za ${platform} na jeziku '${lang}' i drži se tona '${tone}'.
+Za svaku objavu vrati JSON objekat sa poljima:
+  "title", "post", "hashtags" (niz), "cta" (kratak poziv na akciju).
+Bez dodatnog teksta — samo validan JSON niz.
+`;
+
+    const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${process.env.GROQ_API_KEY}`,
@@ -46,41 +50,55 @@ Keep posts concise, punchy, and platform-ready. Avoid filler text.
       },
       body: JSON.stringify({
         model,
+        temperature: 0.8,
+        max_tokens: 1200,
         messages: [
-          { role: "system", content: "You are an expert social media copywriter." },
-          { role: "user", content: userPrompt }
-        ],
-        temperature: 0.8
+          {
+            role: "system",
+            content:
+              "Ti si stručnjak za social media copy. Odgovaraj isključivo u traženom jeziku. Kada se traži JSON, vrati samo čisti JSON niz."
+          },
+          { role: "user", content: prompt }
+        ]
       })
     });
 
-    const bodyText = await r.text();
-    if (!r.ok) return json(r.status, { error: `Groq API ${r.status}: ${bodyText}` });
+    if (!res.ok) {
+      const errText = await res.text();
+      return json(res.status, { error: `Groq API error: ${errText}` });
+    }
 
-    let data = {};
-    try { data = JSON.parse(bodyText); } catch { return json(500, { error: "Nevalidan JSON odgovor." }); }
+    const data = await res.json();
+    const raw = data.choices?.[0]?.message?.content?.trim() || "[]";
 
-    const raw = data?.choices?.[0]?.message?.content || "";
-    const posts = splitPosts(raw);
+    // pokušaj da parsiraš JSON iz odgovora
+    let items;
+    try {
+      items = JSON.parse(raw);
+    } catch {
+      // fallback: ukloni code fence ako ga ima
+      const cleaned = raw.replace(/^```json/i, "").replace(/```$/i, "").trim();
+      items = JSON.parse(cleaned);
+    }
 
-    return json(200, { ok: true, vendor: "groq", language: lang, posts });
+    return json(200, { items });
   } catch (e) {
-    return json(500, { error: String(e) });
+    return json(500, { error: String(e?.message || e) });
   }
 }
 
-function splitPosts(raw) {
-  const arr = raw.split(/(?:^|\n)---+\n?/g).map(s => s.trim()).filter(Boolean);
-  return arr.length ? arr : [raw.trim()];
+function corsHeaders() {
+  return {
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Headers": "Content-Type, Authorization",
+    "Access-Control-Allow-Methods": "POST, OPTIONS",
+  };
 }
 
-function json(status, obj) {
+function json(statusCode, obj) {
   return {
-    statusCode: status,
-    headers: {
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*"
-    },
-    body: JSON.stringify(obj)
+    statusCode,
+    headers: { "Content-Type": "application/json", ...corsHeaders() },
+    body: JSON.stringify(obj),
   };
 }
